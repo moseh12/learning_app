@@ -1,103 +1,104 @@
 import 'package:flutter/material.dart';
-
 class CategoryPage extends StatelessWidget {
-  final String categoryTitle;
-
-  const CategoryPage({required this.categoryTitle, super.key});
+  const CategoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(categoryTitle),
-        backgroundColor: kBlue,
-      ),
-      body: ListView(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.topic, color: Colors.orange),
-            title: const Text('Subcategory 1'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DetailPage(
-                    title: 'Subcategory 1',
-                  ),
-                ),
-              );
-            },
+        appBar: AppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: const Text(
+            'Our Cources',
+            style: TextStyle(color: Colors.white),
           ),
-          ListTile(
-            leading: const Icon(Icons.topic, color: Colors.green),
-            title: const Text('Subcategory 2'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DetailPage(
-                    title: 'Subcategory 2',
-                  ),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.topic, color: Colors.blue),
-            title: const Text('Subcategory 3'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DetailPage(
-                    title: 'Subcategory 3',
-                  ),
-                ),
-              );
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.topic, color: Colors.purple),
-            title: const Text('Subcategory 4'),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DetailPage(
-                    title: 'Subcategory 4',
-                  ),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
-    );
+          //backgroundColor: kBlue,//
+        ),
+        body: Column(
+          children: [
+            CourceContainer(
+                image: 'assets/images/ai.png',
+                courcename: 'Artificial intelligence',
+                authorname: 'Moses Adongo'),
+            CourceContainer(
+                image: 'assets/images/web.png',
+                courcename: 'Web development ',
+                authorname: 'Moses '),
+            CourceContainer(
+                image: 'assets/images/cyber.png',
+                courcename: 'Cybersecurity',
+                authorname: 'Muneer Hasan'),
+            CourceContainer(
+                image: 'assets/images/app.png',
+                courcename: 'App development ',
+                authorname: 'Muneer Hasan'),
+            CourceContainer(
+                image: 'assets/images/st.png',
+                courcename: 'Software testing ',
+                authorname: 'Muneer Hasan'),
+            CourceContainer(
+                image: 'assets/images/ml.png',
+                courcename: 'Machine learning  ',
+                authorname: 'Muneer Hasan'),
+          ],
+        ));
   }
 }
 
-class DetailPage extends StatelessWidget {
-  final String title;
-
-  const DetailPage({required this.title, super.key});
+class CourceContainer extends StatefulWidget {
+  String image, courcename, authorname;
+  CourceContainer(
+      {required this.image,
+      required this.courcename,
+      required this.authorname});
 
   @override
+  State<CourceContainer> createState() => _CourceContainerState();
+}
+
+class _CourceContainerState extends State<CourceContainer> {
+  double _currentSliderValue = 30.0;
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        backgroundColor: kBlue,
-      ),
-      body: Center(
-        child: Text(
-          'Content for $title',
-          style: const TextStyle(fontSize: 24),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 2),
+      child: Card(
+        elevation: 10,
+        child: Row(
+          children: [
+            Image(
+              image: AssetImage(widget.image),
+              width: MediaQuery.sizeOf(context).width * 0.4,
+            ),
+            Column(
+              children: [
+                Text(
+                  widget.courcename,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+                Row(
+                  children: [const Icon(Icons.person), Text(widget.authorname)],
+                ),
+                Row(
+                  children: [
+                    Slider(
+                      activeColor: Colors.yellow,
+                      min: 0,
+                      max: 100,
+                      value: _currentSliderValue,
+                      onChanged: (value) {
+                        setState(() {
+                          _currentSliderValue = value;
+                        });
+                      },
+                    ),
+                    const Text('1/25')
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-// Define your custom colors
-const Color kBlue = Color(0xFF2196F3);
-const Color kPink = Color.fromARGB(255, 98, 8, 35);
