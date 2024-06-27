@@ -1,9 +1,68 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:learning_app/pages/login_page.dart';
 import 'package:learning_app/pages/profile_page.dart';
+import 'package:learning_app/pages/sammpleexam.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  void writeFileFromAssets() async {
+    // Load the image from the asset
+    ByteData data = await rootBundle.load('assets/images/report.pdf');
+
+    // Get the temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    String tempPath = tempDir.path;
+
+    // Create a file and write the bytes
+    File file = File('$tempPath/report.pdf');
+    await file.writeAsBytes(data.buffer.asUint8List(), flush: true);
+
+    print('File saved to ${file.path}');
+  }
+
+  void downloadReport(BuildContext context) async {
+    var status = await Permission.storage.request();
+    if (status.isGranted) {
+      try {
+        var dio = Dio();
+        var dir = await getApplicationDocumentsDirectory();
+        await dio.download(
+          'https://i.pinimg.com/564x/a8/95/61/a89561d5fb4270f06386d9d7bb7506d2.jpg',
+          '${dir.path}/report.pdf',
+          onReceiveProgress: (received, total) {
+            if (total != -1) {
+              print((received / total * 100).toStringAsFixed(0) + "%");
+            }
+          },
+        );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Download completed')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Download failed: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Permission denied')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -184,11 +243,11 @@ class HomePage extends StatelessWidget {
                     color: Colors.white,
                     image: 'assets/images/sample.png',
                     onTap: () {
+                      //writeFileFromAssets();
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const CategoryPage()),
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SampleExam()));
                     },
                   ),
                   CategoryCard(

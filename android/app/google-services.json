@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "445198108948",
+    "project_id": "learn-49d6c",
+    "storage_bucket": "learn-49d6c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:445198108948:android:bc7b162d5cd069d3e05a01",
+        "android_client_info": {
+          "package_name": "com.mchumasoftwares.learning_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNyix2IBlrbuCB2DjoKv5yayCyN2efSsQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
