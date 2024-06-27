@@ -1,0 +1,13 @@
+class Project {
+  final String title;
+  final String description;
+  final String imageUrl;
+  final String author;
+
+  Project({
+    required this.title,
+    required this.description,
+    required this.imageUrl,
+    required this.author,
+  });
+}

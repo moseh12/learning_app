@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:learning_app/pages/assignment.dart';
 import 'package:learning_app/pages/login_page.dart';
 import 'package:learning_app/pages/profile_page.dart';
+import 'package:learning_app/pages/projects.dart';
+import 'package:learning_app/pages/sample_exams.dart';
 
 class HomePage extends StatelessWidget {
   final String userName;
@@ -130,7 +133,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const CategoryPage()),
+                            builder: (context) =>  AssignmentPage()),
                       );
                     },
                   ),
@@ -169,7 +172,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const CategoryPage()),
+                            builder: (context) =>  SampleExamPage()),
                       );
                     },
                   ),
@@ -182,7 +185,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const CategoryPage()),
+                            builder: (context) => ProjectPage()),
                       );
                     },
                   ),
@@ -194,7 +197,7 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -259,7 +262,7 @@ class CategoryCard extends StatelessWidget {
               ),
             ),
             Row(
-              children: [
+              children: const [
                 Icon(
                   Icons.star,
                   color: Colors.yellow,
@@ -325,7 +328,7 @@ class CategoryPage extends StatelessWidget {
             CourceContainer(
                 image: 'assets/images/app.png',
                 courcename: 'App development ',
-                authorname: 'Muneer Hasan'),
+                authorname: 'Moses Hasan'),
             CourceContainer(
                 image: 'assets/images/st.png',
                 courcename: 'Software testing ',
