@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hello, $userName!",
+              "Hello, Muneer!",
               style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,

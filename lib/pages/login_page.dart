@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learning_app/pages/home_page.dart';
 import 'package:learning_app/pages/register.dart';
 
+//import 'package:';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -13,6 +15,18 @@ class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
   String _userName = '';
   String _email = '';
+  final nameControler = TextEditingController();
+  final emailControler = TextEditingController();
+  final passwordControler = TextEditingController();
+  // FirebaseAuth _auth = FirebaseAuth.instance;
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    nameControler.dispose();
+    emailControler.dispose();
+    passwordControler.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +75,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: nameControler,
                             decoration: InputDecoration(
                               hintText: "User Name",
                               hintStyle: const TextStyle(
@@ -135,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: emailControler,
                             decoration: InputDecoration(
                               hintText: "Email",
                               hintStyle: const TextStyle(
@@ -213,6 +229,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: passwordControler,
                             decoration: InputDecoration(
                               hintText: "Password",
                               hintStyle: const TextStyle(
@@ -318,7 +335,7 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.pushReplacement(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => HomePage(userName: _userName),
+                                      builder: (context) => HomePage(),
                                     ),
                                   );
                                 }
@@ -353,7 +370,7 @@ class _LoginPageState extends State<LoginPage> {
                                         Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => HomePage(userName: _userName),
+                                            builder: (context) => HomePage(),
                                           ),
                                         );
                                       }

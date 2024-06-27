@@ -40,6 +40,8 @@ dependencies:
   permission_handler: ^11.3.1
   syncfusion_flutter_pdfviewer: ^26.1.39
   firebase_core: ^3.1.1
+  firebase_auth: ^5.1.1
+
  
 
 dev_dependencies:

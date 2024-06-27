@@ -1,7 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class RegisterPage extends StatelessWidget {
+class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key});
+
+  @override
+  State<RegisterPage> createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final phoneController = TextEditingController();
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   super.dispose();
+  //   nameController.dispose();
+  //   emailController.dispose();
+  //   passwordController.dispose();
+  //   passwordController.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +61,7 @@ class RegisterPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: nameController,
                             decoration: InputDecoration(
                               hintText: "Username",
                               hintStyle: const TextStyle(
@@ -85,52 +107,7 @@ class RegisterPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
-                            decoration: InputDecoration(
-                              hintText: "Password",
-                              hintStyle: const TextStyle(
-                                color: Colors.grey,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.lock,
-                                size: MediaQuery.of(context).size.width * 0.06,
-                                color: Colors.grey,
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      MediaQuery.of(context).size.width * 0.1),
-                                ),
-                                borderSide: const BorderSide(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      MediaQuery.of(context).size.width * 0.1),
-                                ),
-                                borderSide: BorderSide(
-                                  color:
-                                      const Color.fromARGB(255, 225, 121, 243),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.008,
-                                ),
-                              ),
-                            ),
-                            keyboardType: TextInputType.visiblePassword,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.02,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: Material(
-                          elevation: 4,
-                          borderRadius: BorderRadius.circular(
-                              MediaQuery.of(context).size.width * 0.1),
-                          child: TextFormField(
+                            controller: emailController,
                             decoration: InputDecoration(
                               hintText: "Email",
                               hintStyle: const TextStyle(
@@ -206,6 +183,54 @@ class RegisterPage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              hintText: "Password",
+                              hintStyle: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                size: MediaQuery.of(context).size.width * 0.06,
+                                color: Colors.grey,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.1),
+                                ),
+                                borderSide: const BorderSide(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.1),
+                                ),
+                                borderSide: BorderSide(
+                                  color:
+                                      const Color.fromARGB(255, 225, 121, 243),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.008,
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.visiblePassword,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30, right: 30),
+                        child: Material(
+                          elevation: 4,
+                          borderRadius: BorderRadius.circular(
+                              MediaQuery.of(context).size.width * 0.1),
+                          child: TextFormField(
+                            controller: phoneController,
                             decoration: InputDecoration(
                               hintText: "Mobile",
                               hintStyle: const TextStyle(
@@ -252,8 +277,12 @@ class RegisterPage extends StatelessWidget {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                    context, '/login');
+                                _auth.createUserWithEmailAndPassword(
+                                    email: emailController.text.toString(),
+                                    password:
+                                        passwordController.text.toString());
+                                // Navigator.pushReplacementNamed(
+                                //     context, '/login');
                               },
                               child: const Text(
                                 "Sign up",
