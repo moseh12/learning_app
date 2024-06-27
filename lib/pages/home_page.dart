@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:learning_app/pages/assignment.dart';
-import 'package:learning_app/pages/login_page.dart';
 import 'package:learning_app/pages/profile_page.dart';
 import 'package:learning_app/pages/projects.dart';
 import 'package:learning_app/pages/sample_exams.dart';
@@ -17,6 +16,8 @@ class HomePage extends StatelessWidget {
         title: const Text('Learning App'),
         backgroundColor: kBlue,
       ),
+
+      ///
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -133,7 +134,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>  AssignmentPage()),
+                            builder: (context) => AssignmentPage()),
                       );
                     },
                   ),
@@ -172,7 +173,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>  SampleExamPage()),
+                            builder: (context) => SampleExamPage()),
                       );
                     },
                   ),
@@ -184,8 +185,7 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => ProjectPage()),
+                        MaterialPageRoute(builder: (context) => ProjectPage()),
                       );
                     },
                   ),
@@ -207,14 +207,6 @@ class HomePage extends StatelessWidget {
             label: 'My Courses',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Bookmark',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
@@ -231,7 +223,7 @@ class CategoryCard extends StatelessWidget {
   final VoidCallback onTap;
   final String image;
 
-  CategoryCard({
+  const CategoryCard({
     required this.title,
     required this.icon,
     required this.color,
@@ -261,8 +253,8 @@ class CategoryCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Icon(
                   Icons.star,
                   color: Colors.yellow,
@@ -304,14 +296,14 @@ class CategoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: const Text(
             'Our courses',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: kBlue,
         ),
-        body: Column(
+        body: const Column(
           children: [
             CourceContainer(
                 image: 'assets/images/ai.png',
@@ -347,7 +339,8 @@ class CourceContainer extends StatefulWidget {
   final String courcename;
   final String authorname;
 
-  CourceContainer({
+  const CourceContainer({
+    super.key,
     required this.image,
     required this.courcename,
     required this.authorname,
@@ -376,10 +369,11 @@ class _CourceContainerState extends State<CourceContainer> {
               children: [
                 Text(
                   widget.courcename,
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 Row(
-                  children: [Icon(Icons.person), Text(widget.authorname)],
+                  children: [const Icon(Icons.person), Text(widget.authorname)],
                 ),
                 Row(
                   children: [
@@ -394,7 +388,7 @@ class _CourceContainerState extends State<CourceContainer> {
                         });
                       },
                     ),
-                    Text('21/25')
+                    const Text('21/25')
                   ],
                 ),
               ],

@@ -1,7 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({Key? key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _RegisterPageState createState() => _RegisterPageState();
+}
+
+class _RegisterPageState extends State<RegisterPage> {
+  final _formKey = GlobalKey<FormState>();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  String _username = '';
+  String _password = '';
+  String _email = '';
+  String _mobile = '';
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  Future<void> _register() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+        email: _email,
+        password: _password,
+      );
+
+      await userCredential.user!.updateDisplayName(_username);
+
+      await _firestore.collection('users').doc(userCredential.user!.uid).set({
+        'username': _username,
+        'email': _email,
+        'mobile': _mobile,
+      });
+
+      Navigator.pushReplacementNamed(context, '/login');
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message;
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +77,16 @@ class RegisterPage extends StatelessWidget {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.07,
                 ),
+                if (_errorMessage != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Text(
+                      _errorMessage!,
+                      style: const TextStyle(color: Colors.red, fontSize: 14),
+                    ),
+                  ),
                 Form(
+                  key: _formKey,
                   child: Column(
                     children: [
                       Padding(
@@ -72,6 +128,15 @@ class RegisterPage extends StatelessWidget {
                                 ),
                               ),
                             ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field cannot be empty';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _username = value!;
+                            },
                           ),
                         ),
                       ),
@@ -118,6 +183,19 @@ class RegisterPage extends StatelessWidget {
                               ),
                             ),
                             keyboardType: TextInputType.visiblePassword,
+                            obscureText: true,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field cannot be empty';
+                              }
+                              if (value.length < 6) {
+                                return 'Password must be at least 6 characters';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _password = value!;
+                            },
                           ),
                         ),
                       ),
@@ -193,6 +271,9 @@ class RegisterPage extends StatelessWidget {
                               }
                               return null;
                             },
+                            onSaved: (value) {
+                              _email = value!;
+                            },
                           ),
                         ),
                       ),
@@ -212,7 +293,7 @@ class RegisterPage extends StatelessWidget {
                                 color: Colors.grey,
                               ),
                               prefixIcon: Icon(
-                                Icons.lock,
+                                Icons.phone,
                                 size: MediaQuery.of(context).size.width * 0.06,
                                 color: Colors.grey,
                               ),
@@ -239,6 +320,15 @@ class RegisterPage extends StatelessWidget {
                               ),
                             ),
                             keyboardType: TextInputType.phone,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field cannot be empty';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _mobile = value!;
+                            },
                           ),
                         ),
                       ),
@@ -252,16 +342,22 @@ class RegisterPage extends StatelessWidget {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.pushReplacementNamed(
-                                    context, '/login');
+                                if (_formKey.currentState!.validate()) {
+                                  _formKey.currentState!.save();
+                                  _register();
+                                }
                               },
-                              child: const Text(
-                                "Sign up",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text(
+                                      "Sign up",
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
                             ),
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.03,
@@ -307,7 +403,7 @@ class RegisterPage extends StatelessWidget {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.02,
                       ),
-                      Image.asset("assets/images/icons.png")
+                      Image.asset("assets/images/icons.png"),
                     ],
                   ),
                 ),
