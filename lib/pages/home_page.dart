@@ -3,7 +3,9 @@ import 'package:learning_app/pages/login_page.dart';
 import 'package:learning_app/pages/profile_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final String userName;
+
+  const HomePage({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +41,6 @@ class HomePage extends StatelessWidget {
               },
             ),
             ListTile(
-              leading: const Icon(Icons.grade),
-              title: const Text('Courses'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CategoryPage()),
-                );
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.cached),
               title: const Text('Lectures'),
               onTap: () {
@@ -60,17 +52,7 @@ class HomePage extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(Icons.add_task),
-              title: const Text('Quizes'),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const CategoryPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.pageview),
-              title: const Text('Projects'),
+              title: const Text('Quizzes'),
               onTap: () {
                 Navigator.push(
                   context,
@@ -106,9 +88,9 @@ class HomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Hello, User!",
-              style: TextStyle(
+            Text(
+              "Hello, $userName!",
+              style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
@@ -127,7 +109,7 @@ class HomePage extends StatelessWidget {
                 crossAxisCount: 2,
                 children: [
                   CategoryCard(
-                    title: "Online Cources",
+                    title: "Online courses",
                     icon: Icons.calculate,
                     color: Colors.white,
                     image: 'assets/images/cources.png',
@@ -140,7 +122,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   CategoryCard(
-                    title: "Assginment",
+                    title: "Assignments",
                     icon: Icons.science,
                     color: Colors.white,
                     image: 'assets/images/ass.png',
@@ -153,7 +135,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   CategoryCard(
-                    title: "Book",
+                    title: "Books",
                     icon: Icons.history_edu,
                     color: Colors.white,
                     image: 'assets/images/book.png',
@@ -166,7 +148,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   CategoryCard(
-                    title: "Quizes",
+                    title: "Quizzes",
                     icon: Icons.language,
                     color: Colors.white,
                     image: 'assets/images/quiz.png',
@@ -179,7 +161,7 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   CategoryCard(
-                    title: "Sample Exam",
+                    title: "Sample Exams",
                     icon: Icons.language,
                     color: Colors.white,
                     image: 'assets/images/sample.png',
@@ -219,11 +201,11 @@ class HomePage extends StatelessWidget {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.book),
-            label: 'My Cources',
+            label: 'My Courses',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bookmark),
-            label: 'BookMark',
+            label: 'Bookmark',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
@@ -244,7 +226,7 @@ class CategoryCard extends StatelessWidget {
   final IconData icon;
   final Color color;
   final VoidCallback onTap;
-  String image;
+  final String image;
 
   CategoryCard({
     required this.title,
@@ -265,11 +247,8 @@ class CategoryCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Icon(icon, size: 50, color: Colors.white),
             Image(
               image: AssetImage(image),
-              // height: 120,
-              // width: 260,
             ),
             const SizedBox(height: 10),
             Text(
@@ -314,7 +293,6 @@ class CategoryCard extends StatelessWidget {
 const Color kBlue = Color(0xFF2196F3);
 const Color kPink = Color.fromARGB(255, 98, 8, 35);
 
-// You will need to create CategoryPage and LoginPage for this to work properly.
 // Example placeholder for CategoryPage
 class CategoryPage extends StatelessWidget {
   const CategoryPage({super.key});
@@ -325,7 +303,7 @@ class CategoryPage extends StatelessWidget {
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
           title: const Text(
-            'Our Cources',
+            'Our courses',
             style: TextStyle(color: Colors.white),
           ),
           backgroundColor: kBlue,
@@ -339,7 +317,7 @@ class CategoryPage extends StatelessWidget {
             CourceContainer(
                 image: 'assets/images/web.png',
                 courcename: 'Web development ',
-                authorname: 'Muneer Hasan'),
+                authorname: 'Moses Ochieng'),
             CourceContainer(
                 image: 'assets/images/cyber.png',
                 courcename: 'Cybersecurity',
@@ -362,11 +340,15 @@ class CategoryPage extends StatelessWidget {
 }
 
 class CourceContainer extends StatefulWidget {
-  String image, courcename, authorname;
-  CourceContainer(
-      {required this.image,
-      required this.courcename,
-      required this.authorname});
+  final String image;
+  final String courcename;
+  final String authorname;
+
+  CourceContainer({
+    required this.image,
+    required this.courcename,
+    required this.authorname,
+  });
 
   @override
   State<CourceContainer> createState() => _CourceContainerState();
@@ -374,6 +356,7 @@ class CourceContainer extends StatefulWidget {
 
 class _CourceContainerState extends State<CourceContainer> {
   double _currentSliderValue = 30.0;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
