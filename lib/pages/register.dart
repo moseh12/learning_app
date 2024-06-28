@@ -1,54 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
-
-  @override
-  // ignore: library_private_types_in_public_api
-  _RegisterPageState createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
-  final _formKey = GlobalKey<FormState>();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  String _username = '';
-  String _password = '';
-  String _email = '';
-  String _mobile = '';
-  bool _isLoading = false;
-  String? _errorMessage;
-
-  Future<void> _register() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: _email,
-        password: _password,
-      );
-
-      await userCredential.user!.updateDisplayName(_username);
-
-      await _firestore.collection('users').doc(userCredential.user!.uid).set({
-        'username': _username,
-        'email': _email,
-        'mobile': _mobile,
-      });
-
-      Navigator.pushReplacementNamed(context, '/login');
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _errorMessage = e.message;
-        _isLoading = false;
-      });
-    }
-  }
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({Key? key});
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: nameController,
                             decoration: InputDecoration(
                               hintText: "Username",
                               hintStyle: const TextStyle(
@@ -183,19 +137,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             keyboardType: TextInputType.visiblePassword,
-                            obscureText: true,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'This field cannot be empty';
-                              }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _password = value!;
-                            },
                           ),
                         ),
                       ),
@@ -287,6 +228,54 @@ class _RegisterPageState extends State<RegisterPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              hintText: "Password",
+                              hintStyle: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                size: MediaQuery.of(context).size.width * 0.06,
+                                color: Colors.grey,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.1),
+                                ),
+                                borderSide: const BorderSide(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.1),
+                                ),
+                                borderSide: BorderSide(
+                                  color:
+                                      const Color.fromARGB(255, 225, 121, 243),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.008,
+                                ),
+                              ),
+                            ),
+                            keyboardType: TextInputType.visiblePassword,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.02,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30, right: 30),
+                        child: Material(
+                          elevation: 4,
+                          borderRadius: BorderRadius.circular(
+                              MediaQuery.of(context).size.width * 0.1),
+                          child: TextFormField(
+                            controller: phoneController,
                             decoration: InputDecoration(
                               hintText: "Mobile",
                               hintStyle: const TextStyle(
@@ -342,10 +331,8 @@ class _RegisterPageState extends State<RegisterPage> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  _register();
-                                }
+                                Navigator.pushReplacementNamed(
+                                    context, '/login');
                               },
                               child: _isLoading
                                   ? const CircularProgressIndicator(

@@ -1,8 +1,10 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:learning_app/pages/home_page.dart';
 import 'package:learning_app/pages/register.dart';
 
+//import 'package:';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -16,37 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   String _email = '';
   String _password = '';
   String _userName = '';
-  bool _isLoading = false;
-  String? _errorMessage;
-
-  Future<void> _signIn() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
-
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: _email,
-        password: _password,
-      );
-
-      // Assuming userName is saved in user's displayName
-      _userName = userCredential.user?.displayName ?? '';
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => HomePage(userName: _userName),
-        ),
-      );
-    } on FirebaseAuthException catch (e) {
-      setState(() {
-        _errorMessage = e.message;
-        _isLoading = false;
-      });
-    }
-  }
+  String _email = '';
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +75,81 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            decoration: InputDecoration(
+                              hintText: "User Name",
+                              hintStyle: const TextStyle(
+                                color: Colors.grey,
+                              ),
+                              prefixIcon: Icon(
+                                Icons.person,
+                                size: MediaQuery.of(context).size.width * 0.06,
+                                color: Colors.grey,
+                              ),
+                              errorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.01),
+                                ),
+                                borderSide: const BorderSide(
+                                  color: Colors.red,
+                                ),
+                              ),
+                              focusedErrorBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.1),
+                                ),
+                                borderSide: BorderSide(
+                                  color: Colors.red,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.01,
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.1),
+                                ),
+                                borderSide: const BorderSide(
+                                  color: Colors.white,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(
+                                      MediaQuery.of(context).size.width * 0.1),
+                                ),
+                                borderSide: BorderSide(
+                                  color:
+                                      const Color.fromARGB(255, 225, 121, 243),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.008,
+                                ),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'This field cannot be empty';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) {
+                              _userName = value!;
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.035,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 30, right: 30),
+                        child: Material(
+                          elevation: 4,
+                          borderRadius: BorderRadius.circular(
+                              MediaQuery.of(context).size.width * 0.1),
+                          child: TextFormField(
+                            controller: emailControler,
                             decoration: InputDecoration(
                               hintText: "Email",
                               hintStyle: const TextStyle(
@@ -181,6 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
+                            controller: passwordControler,
                             decoration: InputDecoration(
                               hintText: "Password",
                               hintStyle: const TextStyle(
@@ -286,7 +334,12 @@ class _LoginPageState extends State<LoginPage> {
                               onTap: () {
                                 if (_formKey.currentState!.validate()) {
                                   _formKey.currentState!.save();
-                                  _signIn();
+                                  Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => HomePage(userName: _userName),
+                                    ),
+                                  );
                                 }
                               },
                               child: Material(
@@ -312,20 +365,21 @@ class _LoginPageState extends State<LoginPage> {
                                       MediaQuery.of(context).size.width * 0.18,
                                   height:
                                       MediaQuery.of(context).size.height * 0.05,
-                                  child: _isLoading
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
-                                      : IconButton(
-                                          onPressed: () {
-                                            if (_formKey.currentState!
-                                                .validate()) {
-                                              _formKey.currentState!.save();
-                                              _signIn();
-                                            }
-                                          },
-                                          icon: const Icon(Icons.navigate_next_rounded),
-                                        ),
+                                  child: IconButton(
+                                    onPressed: () {
+                                      if (_formKey.currentState!.validate()) {
+                                        _formKey.currentState!.save();
+                                        Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => HomePage(userName: _userName),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                    icon:
+                                        const Icon(Icons.navigate_next_rounded),
+                                  ),
                                 ),
                               ),
                             )
