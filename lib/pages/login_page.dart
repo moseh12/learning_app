@@ -1,10 +1,9 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:learning_app/pages/home_page.dart';
+import 'package:learning_app/pages/forgot_passward.dart';
 import 'package:learning_app/pages/register.dart';
+ // Import the reset password page
 
-//import 'package:';
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -14,11 +13,25 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String _email = '';
-  String _password = '';
-  String _userName = '';
-  String _email = '';
+
+  Future<void> _signIn() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to sign in: ${e.message}')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -56,14 +69,6 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.07,
                 ),
-                if (_errorMessage != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: Text(
-                      _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 14),
-                    ),
-                  ),
                 Form(
                   key: _formKey,
                   child: Column(
@@ -75,81 +80,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
-                            decoration: InputDecoration(
-                              hintText: "User Name",
-                              hintStyle: const TextStyle(
-                                color: Colors.grey,
-                              ),
-                              prefixIcon: Icon(
-                                Icons.person,
-                                size: MediaQuery.of(context).size.width * 0.06,
-                                color: Colors.grey,
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      MediaQuery.of(context).size.width * 0.01),
-                                ),
-                                borderSide: const BorderSide(
-                                  color: Colors.red,
-                                ),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      MediaQuery.of(context).size.width * 0.1),
-                                ),
-                                borderSide: BorderSide(
-                                  color: Colors.red,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.01,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      MediaQuery.of(context).size.width * 0.1),
-                                ),
-                                borderSide: const BorderSide(
-                                  color: Colors.white,
-                                ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(
-                                      MediaQuery.of(context).size.width * 0.1),
-                                ),
-                                borderSide: BorderSide(
-                                  color:
-                                      const Color.fromARGB(255, 225, 121, 243),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.008,
-                                ),
-                              ),
-                            ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'This field cannot be empty';
-                              }
-                              return null;
-                            },
-                            onSaved: (value) {
-                              _userName = value!;
-                            },
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.035,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 30, right: 30),
-                        child: Material(
-                          elevation: 4,
-                          borderRadius: BorderRadius.circular(
-                              MediaQuery.of(context).size.width * 0.1),
-                          child: TextFormField(
-                            controller: emailControler,
+                            controller: _emailController,
                             decoration: InputDecoration(
                               hintText: "Email",
                               hintStyle: const TextStyle(
@@ -212,9 +143,6 @@ class _LoginPageState extends State<LoginPage> {
                               }
                               return null;
                             },
-                            onSaved: (value) {
-                              _email = value!;
-                            },
                           ),
                         ),
                       ),
@@ -228,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                           borderRadius: BorderRadius.circular(
                               MediaQuery.of(context).size.width * 0.1),
                           child: TextFormField(
-                            controller: passwordControler,
+                            controller: _passwordController,
                             decoration: InputDecoration(
                               hintText: "Password",
                               hintStyle: const TextStyle(
@@ -286,13 +214,7 @@ class _LoginPageState extends State<LoginPage> {
                               if (value == null || value.isEmpty) {
                                 return 'This field cannot be empty';
                               }
-                              if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
                               return null;
-                            },
-                            onSaved: (value) {
-                              _password = value!;
                             },
                           ),
                         ),
@@ -300,14 +222,25 @@ class _LoginPageState extends State<LoginPage> {
                       SizedBox(
                         height: MediaQuery.of(context).size.height * 0.03,
                       ),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 32),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 32),
                         child: Align(
                           alignment: Alignment.centerRight,
-                          child: Text(
-                            "Forget your password?",
-                            style: TextStyle(
-                              color: Colors.grey,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ForgotPasswordPage(),
+                                ),
+                              );
+                            },
+                            child: const Text(
+                              "Forgot your password?",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
@@ -331,17 +264,7 @@ class _LoginPageState extends State<LoginPage> {
                               width: MediaQuery.of(context).size.width * 0.03,
                             ),
                             GestureDetector(
-                              onTap: () {
-                                if (_formKey.currentState!.validate()) {
-                                  _formKey.currentState!.save();
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => HomePage(userName: _userName),
-                                    ),
-                                  );
-                                }
-                              },
+                              onTap: _signIn,
                               child: Material(
                                 elevation: 4,
                                 borderRadius: BorderRadius.circular(
@@ -366,17 +289,7 @@ class _LoginPageState extends State<LoginPage> {
                                   height:
                                       MediaQuery.of(context).size.height * 0.05,
                                   child: IconButton(
-                                    onPressed: () {
-                                      if (_formKey.currentState!.validate()) {
-                                        _formKey.currentState!.save();
-                                        Navigator.pushReplacement(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => HomePage(userName: _userName),
-                                          ),
-                                        );
-                                      }
-                                    },
+                                    onPressed: _signIn,
                                     icon:
                                         const Icon(Icons.navigate_next_rounded),
                                   ),

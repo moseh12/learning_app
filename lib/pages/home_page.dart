@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:learning_app/pages/assignment.dart';
-import 'package:learning_app/pages/login_page.dart';
 import 'package:learning_app/pages/profile_page.dart';
+import 'package:learning_app/pages/projects.dart';
+import 'package:learning_app/pages/sample_exams.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final String userName;
+
+  const HomePage({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +93,7 @@ class HomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Hello, Muneer!",
+              "Hello, $userName!",
               style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
@@ -131,7 +134,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>  AssignmentPage()),
+                            builder: (context) => AssignmentPage()),
                       );
                     },
                   ),
@@ -170,7 +173,7 @@ class HomePage extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>  SampleExamPage()),
+                            builder: (context) => SampleExamPage()),
                       );
                     },
                   ),
@@ -182,8 +185,7 @@ class HomePage extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => ProjectPage()),
+                        MaterialPageRoute(builder: (context) => ProjectPage()),
                       );
                     },
                   ),
@@ -195,7 +197,7 @@ class HomePage extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
@@ -251,8 +253,8 @@ class CategoryCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Row(
-              children: const [
+            const Row(
+              children: [
                 Icon(
                   Icons.star,
                   color: Colors.yellow,
@@ -318,7 +320,7 @@ class CategoryPage extends StatelessWidget {
             CourceContainer(
                 image: 'assets/images/app.png',
                 courcename: 'App development ',
-                authorname: 'Muneer Hasan'),
+                authorname: 'Moses Hasan'),
             CourceContainer(
                 image: 'assets/images/st.png',
                 courcename: 'Software testing ',
