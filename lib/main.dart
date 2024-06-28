@@ -4,6 +4,7 @@ import 'package:learning_app/firebase_options.dart';
 import 'package:learning_app/pages/login_page.dart';
 import 'package:learning_app/pages/home_page.dart';
 import 'package:learning_app/pages/welcome_page.dart';
+import 'package:learning_app/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,11 +25,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/welcome',
+      initialRoute: '/splash',
       routes: {
+        '/splash': (context) => const SplashScreen(),
         '/welcome': (context) => const WelcomePage(),
         '/login': (context) => const LoginPage(),
-        '/home': (context) => const HomePage(userName: '',),
+        '/home': (context) => const HomePage(
+              userName: '',
+            ),
       },
     );
   }
